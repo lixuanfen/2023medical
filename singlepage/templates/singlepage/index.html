@@ -1,0 +1,65 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Scroll Detection</title> 
+        <style> 
+            body { 
+                transition: background 0.3s; 
+                margin: 0;
+                padding: 20px;
+                font-family: Arial, sans-serif;
+            }
+            
+            p {
+                margin: 10px 0;
+                font-size: 18px;
+                text-align: center;
+            }
+            
+            .info {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+        </style> 
+        <script> 
+            // Function to generate paragraphs from 0 to 100
+            function generateContent() { 
+                const container = document.createElement('div'); 
+                for (let i = 0; i <= 100; i++) { 
+                    const p = document.createElement('p'); 
+                    p.textContent = i; // Set paragraph text to the current number
+                    p.style.borderBottom = '1px solid #eee';
+                    p.style.padding = '5px 0';
+                    container.appendChild(p); 
+                } 
+                document.body.appendChild(container); 
+            } 
+ 
+            // Event listener for scrolling 
+            window.onscroll = () => { 
+                // Check if we're at the bottom 
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) { 
+                    // Change color to green 
+                    document.querySelector('body').style.background = '#d4edda'; 
+                } else { 
+                    // Change color to white 
+                    document.querySelector('body').style.background = 'white'; 
+                } 
+            }; 
+ 
+            // Generate content when the window loads 
+            window.onload = generateContent; 
+        </script> 
+    </head> 
+    <body> 
+        <div class="info">滚动到页面底部查看效果</div>
+    </body> 
+</html>
