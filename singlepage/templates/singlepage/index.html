@@ -1,65 +1,193 @@
 <!DOCTYPE html> 
-<html lang="en"> 
-    <head> 
-        <meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-        <title>Scroll Detection</title> 
-        <style> 
-            body { 
-                transition: background 0.3s; 
-                margin: 0;
-                padding: 20px;
-                font-family: Arial, sans-serif;
-            }
-            
-            p {
-                margin: 10px 0;
-                font-size: 18px;
-                text-align: center;
-            }
-            
-            .info {
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                background: rgba(0,0,0,0.8);
-                color: white;
-                padding: 10px;
-                border-radius: 5px;
-                font-size: 14px;
-            }
-        </style> 
-        <script> 
-            // Function to generate paragraphs from 0 to 100
-            function generateContent() { 
-                const container = document.createElement('div'); 
-                for (let i = 0; i <= 100; i++) { 
-                    const p = document.createElement('p'); 
-                    p.textContent = i; // Set paragraph text to the current number
-                    p.style.borderBottom = '1px solid #eee';
-                    p.style.padding = '5px 0';
-                    container.appendChild(p); 
-                } 
-                document.body.appendChild(container); 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Animation</title>
+    <style>
+        @keyframes move { 
+            from { 
+                left: 0%; 
             } 
- 
-            // Event listener for scrolling 
-            window.onscroll = () => { 
-                // Check if we're at the bottom 
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) { 
-                    // Change color to green 
-                    document.querySelector('body').style.background = '#d4edda'; 
-                } else { 
-                    // Change color to white 
-                    document.querySelector('body').style.background = 'white'; 
-                } 
-            }; 
- 
-            // Generate content when the window loads 
-            window.onload = generateContent; 
-        </script> 
-    </head> 
-    <body> 
-        <div class="info">滚动到页面底部查看效果</div>
-    </body> 
+            to { 
+                left: 50%; 
+            } 
+        }
+        
+        @keyframes zoomInOut {
+            0% {
+                transform: translateX(-50%) scale(1);
+            }
+            25% {
+                transform: translateX(-50%) scale(1.5);
+            }
+            50% {
+                transform: translateX(-50%) scale(1);
+            }
+            75% {
+                transform: translateX(-50%) scale(0.5);
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+        
+        @keyframes colorChange {
+            0% {
+                color: #ff6b6b;
+            }
+            25% {
+                color: #4ecdc4;
+            }
+            50% {
+                color: #45b7d1;
+            }
+            75% {
+                color: #96ceb4;
+            }
+            100% {
+                color: #ff6b6b;
+            }
+        }
+        
+        h1 { 
+            position: relative; 
+            animation-name: move; 
+            animation-duration: 2s; 
+            animation-fill-mode: forwards;
+            font-size: 48px;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .zoom-animation {
+            animation: zoomInOut 3s ease-in-out infinite;
+        }
+        
+        .color-animation {
+            animation: colorChange 4s linear infinite;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+        
+        .controls button {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .controls button:hover {
+            background: #45b7d1;
+        }
+        
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h3>动画控制</h3>
+        <button onclick="startZoomAnimation()">开始放大缩小</button>
+        <button onclick="stopZoomAnimation()">停止放大缩小</button>
+        <button onclick="startColorAnimation()">开始颜色变化</button>
+        <button onclick="stopColorAnimation()">停止颜色变化</button>
+        <button onclick="resetAnimation()">重置动画</button>
+    </div>
+    
+    <h1 id="welcomeText">Welcome!</h1>
+    
+    <div class="info">点击Welcome!文字或使用上方按钮控制动画效果</div>
+    
+    <script>
+        const welcomeText = document.getElementById('welcomeText');
+        
+        // 开始放大缩小动画
+        function startZoomAnimation() {
+            welcomeText.classList.add('zoom-animation');
+        }
+        
+        // 停止放大缩小动画
+        function stopZoomAnimation() {
+            welcomeText.classList.remove('zoom-animation');
+        }
+        
+        // 开始颜色变化动画
+        function startColorAnimation() {
+            welcomeText.classList.add('color-animation');
+        }
+        
+        // 停止颜色变化动画
+        function stopColorAnimation() {
+            welcomeText.classList.remove('color-animation');
+        }
+        
+        // 重置所有动画
+        function resetAnimation() {
+            welcomeText.classList.remove('zoom-animation', 'color-animation');
+        }
+        
+        // 点击文字切换放大缩小动画
+        welcomeText.addEventListener('click', function() {
+            if (welcomeText.classList.contains('zoom-animation')) {
+                stopZoomAnimation();
+            } else {
+                startZoomAnimation();
+            }
+        });
+        
+        // 双击文字切换颜色变化动画
+        welcomeText.addEventListener('dblclick', function() {
+            if (welcomeText.classList.contains('color-animation')) {
+                stopColorAnimation();
+            } else {
+                startColorAnimation();
+            }
+        });
+        
+        // 页面加载时自动开始放大缩小动画
+        window.onload = function() {
+            setTimeout(() => {
+                startZoomAnimation();
+            }, 1000);
+        };
+    </script>
+</body>
 </html>

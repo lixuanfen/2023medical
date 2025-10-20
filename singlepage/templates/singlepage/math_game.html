@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学游戏 - 加法挑战</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .problem {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        .input-container {
+            margin: 30px 0;
+        }
+        
+        input {
+            font-size: 24px;
+            padding: 15px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 20px 0;
+        }
+        
+        .message {
+            font-size: 18px;
+            margin: 15px 0;
+            min-height: 27px;
+        }
+        
+        .correct {
+            color: #28a745;
+        }
+        
+        .incorrect {
+            color: #dc3545;
+        }
+        
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        
+        .button:hover {
+            background: #5a6fd8;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="title">数学加法挑战</div>
+        <div class="instructions">输入正确的答案来获得分数！</div>
+        
+    <div class="math-game-container">
+        <h1 class="game-title">🧮 数学游戏</h1>
+        <p class="game-subtitle">挑战你的加法技能！</p>
+        
+        <!-- 分数显示 -->
+        <div class="score-container">
+            <strong>得分: <span id="score">0</span></strong>
+        </div>
+        
+        <!-- 问题区域 -->
+        <div class="problem-container">
+            <div class="problem-text">
+                <span id="num1">5</span> + <span id="num2">3</span> = ?
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="input-container">
+                <input
+                    type="number"
+                    class="answer-input"
+                    id="answer-input"
+                    placeholder="输入答案"
+                    autofocus
+                >
+            </div>
+            
+            <!-- 消息显示 -->
+            <div class="message" id="message" style="display: none;"></div>
+        </div>
+        
+        <!-- 按钮区域 -->
+        <div>
+            <button class="button" id="check-btn" disabled>
+                ✅ 检查答案
+            </button>
+            <button class="button" id="reset-btn">
+                🔄 重新开始
+            </button>
+        </div>
+        
+        <!-- 游戏说明 -->
+        <div class="instructions">
+            <p>💡 提示：按回车键快速提交答案</p>
+            <p>🎯 目标：尽可能多地答对问题！</p>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        let gameState = {
+            num1: Math.floor(Math.random() * 10) + 1,
+            num2: Math.floor(Math.random() * 10) + 1,
+            score: 0,
+            message: '',
+            messageClass: ''
+        };
+
+        // DOM元素
+        const num1Element = document.getElementById('num1');
+        const num2Element = document.getElementById('num2');
+        const scoreElement = document.getElementById('score');
+        const answerInput = document.getElementById('answer-input');
+        const messageElement = document.getElementById('message');
+        const checkButton = document.getElementById('check-btn');
+        const resetButton = document.getElementById('reset-btn');
+
+        // 更新显示
+        function updateDisplay() {
+            num1Element.textContent = gameState.num1;
+            num2Element.textContent = gameState.num2;
+            scoreElement.textContent = gameState.score;
+            
+            if (gameState.message) {
+                messageElement.textContent = gameState.message;
+                messageElement.className = 'message ' + gameState.messageClass;
+                messageElement.style.display = 'block';
+            } else {
+                messageElement.style.display = 'none';
+            }
+            
+            // 更新按钮状态
+            checkButton.disabled = !answerInput.value.trim();
+        }
+
+        // 检查答案
+        function checkAnswer() {
+            const userAnswer = parseInt(answerInput.value);
+            const correctAnswer = gameState.num1 + gameState.num2;
+            
+            if (userAnswer === correctAnswer) {
+                // 答案正确
+                gameState.score += 1;
+                gameState.num1 = Math.floor(Math.random() * 10) + 1;
+                gameState.num2 = Math.floor(Math.random() * 10) + 1;
+                gameState.message = '🎉 太棒了！答案正确！';
+                gameState.messageClass = 'correct';
+            } else {
+                // 答案错误
+                gameState.message = `❌ 正确答案是 ${correctAnswer}，请再试一次！`;
+                gameState.messageClass = 'incorrect';
+            }
+            
+            // 清空输入框
+            answerInput.value = '';
+            updateDisplay();
+            
+            // 3秒后清除消息
+            setTimeout(() => {
+                gameState.message = '';
+                gameState.messageClass = '';
+                updateDisplay();
+            }, 3000);
+        }
+
+        // 重新开始游戏
+        function resetGame() {
+            gameState = {
+                num1: Math.floor(Math.random() * 10) + 1,
+                num2: Math.floor(Math.random() * 10) + 1,
+                score: 0,
+                message: '',
+                messageClass: ''
+            };
+            answerInput.value = '';
+            updateDisplay();
+            answerInput.focus();
+        }
+
+        // 事件监听器
+        answerInput.addEventListener('input', function() {
+            checkButton.disabled = !this.value.trim();
+        });
+
+        answerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && this.value.trim()) {
+                checkAnswer();
+            }
+        });
+
+        checkButton.addEventListener('click', checkAnswer);
+        resetButton.addEventListener('click', resetGame);
+
+        // 初始化游戏
+        updateDisplay();
+        answerInput.focus();
+    </script>
+</body>
+</html>
